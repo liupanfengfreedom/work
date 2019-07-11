@@ -1,0 +1,9 @@
+E:\VsProjects\Server\Server\bin\Release\Server.exe.config
+E:\VsProjects\Server\Server\bin\Release\Server.exe
+E:\VsProjects\Server\Server\bin\Release\Server.pdb
+E:\VsProjects\Server\Server\bin\Release\Newtonsoft.Json.dll
+E:\VsProjects\Server\Server\bin\Release\Newtonsoft.Json.xml
+E:\VsProjects\Server\Server\obj\Release\Server.csproj.CoreCompileInputs.cache
+E:\VsProjects\Server\Server\obj\Release\Server.csproj.CopyComplete
+E:\VsProjects\Server\Server\obj\Release\Server.exe
+E:\VsProjects\Server\Server\obj\Release\Server.pdb

@@ -1,0 +1,109 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Threading;
+namespace MatchServer
+{
+   // public delegate void OnReceivedCompleted(List<byte>mcontent);
+    public delegate void OnReceivedCompleted(byte[] buffer);
+ class TCPClient
+    {
+        public string map { private set; get; }
+        public string vip { private set; get; }
+        public string rank { private set; get; }
+        public string nvn { private set; get; }
+
+        /// <summary>
+        /// //////////////////////////////////////////////
+        /// </summary>
+        public  Room room;
+        public bool isinmatchpool=false;
+        public bool mclosed = false;
+        Socket clientsocket;
+        public OnReceivedCompleted OnReceivedCompletePointer=null;
+        bool entrymapok;
+        const int BUFFER_SIZE = 65536;
+        public byte[] receivebuffer = new byte[BUFFER_SIZE];
+        Thread ReceiveThread;
+        public bool getentrymapisok() {
+            return entrymapok;
+        }
+        public TCPClient(Socket msocket)
+        {
+            Console.WriteLine("TCPClient "+ msocket.RemoteEndPoint);
+            entrymapok = false;
+            clientsocket = msocket;
+            OnReceivedCompletePointer += messagehandler;
+            ReceiveThread = new Thread(new ThreadStart(ReceiveLoop));
+            ReceiveThread.IsBackground = true;
+            ReceiveThread.Start();      
+        }
+        ~TCPClient()
+        {
+            Console.WriteLine("TCPClient In destructor.");
+        }
+        public void Send(byte[] buffer)
+        {
+            if (clientsocket != null)
+            {
+                clientsocket.Send(buffer);
+            }
+        }
+        public void Send(String message)
+        {
+            ASCIIEncoding asen = new ASCIIEncoding();
+            if (clientsocket != null)
+            {
+                clientsocket.Send(asen.GetBytes(message));
+            }
+        }
+        void ReceiveLoop()
+        {
+            while (true)
+            {
+                try {
+                    Array.Clear(receivebuffer, 0, receivebuffer.Length);
+                    clientsocket.Receive(receivebuffer);
+                    OnReceivedCompletePointer?.Invoke(receivebuffer);
+                    Thread.Sleep(30);
+                }
+                catch (SocketException)
+                {
+                    mclosed = true;
+                    CloseSocket();
+                    room.Remove(this);
+                    ReceiveThread.Abort();
+                }
+            }
+
+        }
+        public void CloseSocket()
+        {
+            clientsocket.Close();
+        }
+        void messagehandler(byte[] buffer)
+        {
+            var str = System.Text.Encoding.Default.GetString(buffer);
+            FMessagePackage mp = JsonConvert.DeserializeObject<FMessagePackage>(str);
+            switch (mp.MT) 
+            {
+                case MessageType.MATCH:
+                    map = mp.PayLoad;
+                    break;
+                case MessageType.EntryMAPOK:
+                    entrymapok = true;
+                    break;
+                case MessageType.EXITGAME:
+                    mclosed = true;
+                    CloseSocket();
+                    room.Remove(this);
+                    ReceiveThread.Abort();
+                    break;
+            }
+        }
+    }
+}
