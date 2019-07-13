@@ -12,10 +12,10 @@ namespace MatchServer
     public delegate void OnReceivedCompleted(byte[] buffer);
  class TCPClient
     {
-        public string map { private set; get; }
-        public string vip { private set; get; }
-        public string rank { private set; get; }
-        public string nvn { private set; get; }
+        public String map { private set; get; }
+        public String vip { private set; get; }
+        public String rank { private set; get; }
+        public String nvn { private set; get; }
 
         /// <summary>
         /// //////////////////////////////////////////////
@@ -93,6 +93,7 @@ namespace MatchServer
             {
                 case MessageType.MATCH:
                     map = mp.PayLoad;
+                    Console.WriteLine(map);
                     break;
                 case MessageType.EntryMAPOK:
                     entrymapok = true;

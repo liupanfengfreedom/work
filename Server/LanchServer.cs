@@ -17,6 +17,7 @@ namespace MatchServer
 
   public  class LanchServer
     {
+        private static int preport = 0;
         public const int startingport = 7777;
         public const string  serverip = "192.168.1.240";
         public static Process launchserver(int port)
@@ -64,7 +65,7 @@ namespace MatchServer
             return inUse;
         }
         static int GetOneAvailablePort()
-        {          
+        {
             int counter = 0;
             bool b = PortInUse(startingport);
             while (b)
@@ -74,8 +75,13 @@ namespace MatchServer
                 {
                     counter++;
                 }
-            }         
-            return startingport+counter;
+            }
+            if (preport == (startingport + counter))
+            {
+                counter++;
+            }
+            preport = startingport + counter;
+            return preport;
         }
         public static Roomipprocess CreateOneRoom()
         {

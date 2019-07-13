@@ -76,6 +76,7 @@ namespace MatchServer
                                 AllWaitforMatchpools[j].currentroom = new Room(6, LanchServer.CreateOneRoom());
                                 AllWaitforMatchpools[j].currentroom.listroom = roomlist;
                                 AllWaitforMatchpools[j].currentroom.tcpclienttype = AllWaitforMatchpools[j];
+                               //Thread.Sleep(100);//wait IP port take effect
                             }
                             TCPClient temp = AllWaitforMatchpools[j].MatchHashsetPool.ElementAt(i); ;
                             bool notfull = AllWaitforMatchpools[j].currentroom.Add(temp);
@@ -129,7 +130,7 @@ namespace MatchServer
                         bool b_hasmap = false;
                         for (int j=0 ; j < AllWaitforMatchpools.Count; j++)
                         {
-                            bool b = AllWaitforMatchpools[j].map == singinpool[i].map;
+                            bool b = AllWaitforMatchpools[j].map == singinpool[i].map && !String.IsNullOrEmpty(singinpool[i].map);
                             bool b1 = AllWaitforMatchpools[j].rank == singinpool[i].rank;
                             b1 = true;
                             bool b2 = AllWaitforMatchpools[j].vip  == singinpool[i].vip;
@@ -139,10 +140,13 @@ namespace MatchServer
                             {
                                 b_hasmap = true;
                                 AllWaitforMatchpools[j].MatchHashsetPool.Add(singinpool[i]);
+                                Console.WriteLine(" if (b&&b1&&b2)");
+
                             }
                         }
                         if (!b_hasmap)
                         {
+                            Console.WriteLine("if (!b_hasmap)");
                             TCPClienttype temptype = new TCPClienttype();
                             temptype.map = singinpool[i].map;
                             temptype.rank = singinpool[i].rank;

@@ -7,4 +7,3 @@ E:\VsProjects\Server\Server\obj\Debug\Server.pdb
 E:\VsProjects\Server\Server\bin\Debug\Newtonsoft.Json.dll
 E:\VsProjects\Server\Server\bin\Debug\Newtonsoft.Json.xml
 E:\VsProjects\Server\Server\obj\Debug\Server.csproj.CopyComplete
-E:\VsProjects\Server\Server\obj\Debug\Server.csprojAssemblyReference.cache
