@@ -93,29 +93,40 @@ namespace MatchServer
         void messagehandler(byte[] buffer)
         {
             FMessagePackage mp;
+            try
+            {
 #if UTF16
-            var str1 = System.Text.Encoding.Unicode.GetString(buffer);
-            mp = JsonConvert.DeserializeObject<FMessagePackage>(str1);
+                var str1 = System.Text.Encoding.Unicode.GetString(buffer);
+                mp = JsonConvert.DeserializeObject<FMessagePackage>(str1);
 #else
             var str = System.Text.Encoding.UTF8.GetString(buffer);
             mp = JsonConvert.DeserializeObject<FMessagePackage>(str);
 #endif
-            switch (mp.MT) 
-            {
-                case MessageType.MATCH:
-                    map = mp.PayLoad;
-                    Console.WriteLine(map);
-                    break;
-                case MessageType.EntryMAPOK:
-                    entrymapok = true;
-                    break;
-                case MessageType.EXITGAME:
-                    mclosed = true;
-                    CloseSocket();
-                    room.Remove(this);
-                    ReceiveThread.Abort();
-                    break;
+                switch (mp.MT)
+                {
+                    case MessageType.MATCH:
+                        map = mp.PayLoad;
+                        Console.WriteLine(map);
+                        break;
+                    case MessageType.EntryMAPOK:
+                        entrymapok = true;
+                        break;
+                    case MessageType.EXITGAME:
+                        mclosed = true;
+                        CloseSocket();
+                        room.Remove(this);
+                        ReceiveThread.Abort();
+                        break;
+                }
             }
+            catch(Newtonsoft.Json.JsonSerializationException){//buffer all zero//occur when mobile client force kill the game client
+                mclosed = true;
+                CloseSocket();
+                room.Remove(this);
+                ReceiveThread.Abort();
+            }
+
+
         }
     }
 }
