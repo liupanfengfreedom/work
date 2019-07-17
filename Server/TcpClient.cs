@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define UTF16
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -55,7 +56,11 @@ namespace MatchServer
         }
         public void Send(String message)
         {
+#if UTF16
+            UnicodeEncoding asen = new UnicodeEncoding();
+#else
             ASCIIEncoding asen = new ASCIIEncoding();
+#endif
             if (clientsocket != null)
             {
                 clientsocket.Send(asen.GetBytes(message));
@@ -87,8 +92,14 @@ namespace MatchServer
         }
         void messagehandler(byte[] buffer)
         {
-            var str = System.Text.Encoding.Default.GetString(buffer);
-            FMessagePackage mp = JsonConvert.DeserializeObject<FMessagePackage>(str);
+            FMessagePackage mp;
+#if UTF16
+            var str1 = System.Text.Encoding.Unicode.GetString(buffer);
+            mp = JsonConvert.DeserializeObject<FMessagePackage>(str1);
+#else
+            var str = System.Text.Encoding.UTF8.GetString(buffer);
+            mp = JsonConvert.DeserializeObject<FMessagePackage>(str);
+#endif
             switch (mp.MT) 
             {
                 case MessageType.MATCH:
