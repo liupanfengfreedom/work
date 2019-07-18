@@ -29,6 +29,8 @@ namespace MatchServer
         bool entrymapok;
         const int BUFFER_SIZE = 65536;
         public byte[] receivebuffer = new byte[BUFFER_SIZE];
+        string filestringpayload;
+        bool isfile = false;
         Thread ReceiveThread;
         public bool getentrymapisok() {
             return entrymapok;
@@ -96,12 +98,37 @@ namespace MatchServer
             try
             {
 #if UTF16
-                var str1 = System.Text.Encoding.Unicode.GetString(buffer);
-                mp = JsonConvert.DeserializeObject<FMessagePackage>(str1);
+                var str = System.Text.Encoding.Unicode.GetString(buffer);
 #else
             var str = System.Text.Encoding.UTF8.GetString(buffer);
-            mp = JsonConvert.DeserializeObject<FMessagePackage>(str);
 #endif
+                int len = str.Length;
+                string filestr = "{\r\n\t\"mT\": \"FILE";
+                string fileendstr = "{\r\n\t\"mT\": \"FILEEND";
+                if (isfile)
+                {
+                    if (str.StartsWith(fileendstr))
+                    {
+                        int size = filestringpayload.Length;
+                        isfile = false;
+                        return;
+                    }
+
+                    filestringpayload += str;
+                    int size1 = filestringpayload.Length;
+                    FMessagePackage filesend = new FMessagePackage();
+                    filesend.MT = MessageType.FILE;//go on             
+                    String strsend = JsonConvert.SerializeObject(filesend);
+                    Send(strsend);
+                    return;
+                }
+                if (str.StartsWith(filestr))
+                {
+                    isfile = true;
+                    return;
+                }
+
+                mp = JsonConvert.DeserializeObject<FMessagePackage>(str);
                 switch (mp.MT)
                 {
                     case MessageType.MATCH:
@@ -118,6 +145,7 @@ namespace MatchServer
                         ReceiveThread.Abort();
                         break;
                 }
+
             }
             catch(Newtonsoft.Json.JsonSerializationException){//buffer all zero//occur when mobile client force kill the game client
                 mclosed = true;

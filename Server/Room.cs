@@ -18,7 +18,8 @@ namespace MatchServer
         EntryMAP,
         EntryMAPOK,
         EXITGAME,
-
+        FILE,
+        FILEEND,
     }
     struct FMessagePackage
     {
