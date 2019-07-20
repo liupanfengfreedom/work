@@ -82,7 +82,7 @@ namespace MatchServer
                 {
                     mclosed = true;
                     CloseSocket();
-                    room.Remove(this);
+                    room?.Remove(this);
                     ReceiveThread.Abort();
                 }
             }
@@ -141,7 +141,7 @@ namespace MatchServer
                     case MessageType.EXITGAME:
                         mclosed = true;
                         CloseSocket();
-                        room.Remove(this);
+                        room?.Remove(this);
                         ReceiveThread.Abort();
                         break;
                 }
@@ -150,7 +150,7 @@ namespace MatchServer
             catch(Newtonsoft.Json.JsonSerializationException){//buffer all zero//occur when mobile client force kill the game client
                 mclosed = true;
                 CloseSocket();
-                room.Remove(this);
+                room?.Remove(this);
                 ReceiveThread.Abort();
             }
 
