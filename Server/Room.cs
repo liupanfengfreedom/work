@@ -15,6 +15,7 @@ namespace MatchServer
         SINGUP,
         LOGIN,
         MATCH,
+        SAVEMAPACTORINFOR,
         EntryMAP,
         EntryMAPOK,
         EXITGAME,
