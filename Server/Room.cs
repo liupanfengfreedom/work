@@ -11,7 +11,6 @@ namespace MatchServer
 {
     enum MessageType
     {
-        SENDEND,
         SINGUP,
         LOGIN,
         MATCH,
@@ -21,6 +20,7 @@ namespace MatchServer
         EXITGAME,
         FILE,
         FILEEND,
+        FILERECEIVEOK,
     }
     struct FMessagePackage
     {
