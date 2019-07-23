@@ -11,16 +11,21 @@ namespace MatchServer
 {
     enum MessageType
     {
+        FILE,//changless
+        FILEEND,//changless
+        CLIENT_FILE,
+        CLIENT_FILEEND,
+        CLIENT_FILERECEIVEOK,
         SINGUP,
         LOGIN,
         MATCH,
         SAVEMAPACTORINFOR,
+        GETMAPACTORINFOR,
+        MAPACTORINFORSENDOK,
         EntryMAP,
         EntryMAPOK,
         EXITGAME,
-        FILE,
-        FILEEND,
-        FILERECEIVEOK,
+        FILERECEIVEOK,//server side receive ok
     }
     struct FMessagePackage
     {
