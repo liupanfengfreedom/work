@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define MODE1
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -73,6 +74,7 @@ namespace MatchServer
         {
             mtc.room = this;
             mPeopleinroom.Add(mtc);
+#if MODE1
             ///////////////////
             ///
             FMessagePackage mp = new FMessagePackage();
@@ -80,6 +82,7 @@ namespace MatchServer
             mp.PayLoad = roomipaddress;
             String str = JsonConvert.SerializeObject(mp);
             mtc.Send(str);
+#endif
             if (pker.runing == false)
             {
                 pker.runing = true;
@@ -94,10 +97,17 @@ namespace MatchServer
             }
             else
             {
-                //Thread mt = new Thread(new ThreadStart(allpeoplepresentjustgo));
-                //mt.Start();
+#if MODE1
+#else
+                Thread mt = new Thread(new ThreadStart(allpeoplepresentjustgo));
+                mt.Start();
+                Console.WriteLine("allpeoplepresentjustgo :");
+
+#endif
                 return false;
             }
+
+
         }
         public bool Remove(TCPClient mtc)
         {
@@ -134,7 +144,7 @@ namespace MatchServer
                 mPeopleinroom[i].Send(str);
                 // while (!mPeopleinroom[i].getentrymapisok())
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(1);
                 }
             }
         }
