@@ -14,6 +14,7 @@ namespace MatchServer
  class TCPClient
     {
         public String map { private set; get; }
+        public String mapID { private set; get; }
         public String vip { private set; get; }
         public String rank { private set; get; }
         public String nvn { private set; get; }
@@ -132,7 +133,10 @@ namespace MatchServer
                 switch (mp.MT)
                 {
                     case MessageType.MATCH:
-                        map = mp.PayLoad;
+                        String[] strarray = mp.PayLoad.Split('?');
+                        map = strarray[0];//map
+                        mapID = strarray[1];//mapID
+                        nvn = strarray[2];//nvn
                         Console.WriteLine(map);
                         break;
                     case MessageType.EntryMAPOK:

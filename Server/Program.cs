@@ -14,6 +14,7 @@ namespace MatchServer
     class TCPClienttype
     {
         public  string map;
+        public string mapID;
         public string vip;
         public string rank;
         public string nvn;
@@ -73,7 +74,12 @@ namespace MatchServer
 
                             if (AllWaitforMatchpools[j].currentroom == null || AllWaitforMatchpools[j].currentroom.mprocess.HasExited)
                             {
-                                AllWaitforMatchpools[j].currentroom = new Room(6, LanchServer.CreateOneRoom());
+                                int nvn=0;
+                                if (!Int32.TryParse(AllWaitforMatchpools[j].nvn, out nvn))
+                                {
+                                    nvn = 2;
+                                }
+                                AllWaitforMatchpools[j].currentroom = new Room(nvn, LanchServer.CreateOneRoom());//the client who create room determine the nvn 
                                 AllWaitforMatchpools[j].currentroom.listroom = roomlist;
                                 AllWaitforMatchpools[j].currentroom.tcpclienttype = AllWaitforMatchpools[j];
                                //Thread.Sleep(100);//wait IP port take effect
@@ -135,8 +141,9 @@ namespace MatchServer
                             b1 = true;
                             bool b2 = AllWaitforMatchpools[j].vip  == singinpool[i].vip;
                             b2 = true;
-
-                            if (b&&b1&&b2)
+                            bool b3 = AllWaitforMatchpools[j].nvn == singinpool[i].nvn;
+                            bool b4 = AllWaitforMatchpools[j].mapID == singinpool[i].mapID;
+                            if (b&&b1&&b2 && b3 && b4)
                             {
                                 b_hasmap = true;
                                 AllWaitforMatchpools[j].MatchHashsetPool.Add(singinpool[i]);
@@ -151,6 +158,8 @@ namespace MatchServer
                             temptype.map = singinpool[i].map;
                             temptype.rank = singinpool[i].rank;
                             temptype.vip = singinpool[i].vip;
+                            temptype.nvn = singinpool[i].nvn;
+                            temptype.mapID = singinpool[i].mapID;
                             AllWaitforMatchpools.Add(temptype);//
                             ///remove some TCPClienttype from AllWaitforMatchpools maybe not necessary;
                         }

@@ -144,7 +144,7 @@ namespace MatchServer
                 mPeopleinroom[i].Send(str);
                 // while (!mPeopleinroom[i].getentrymapisok())
                 {
-                    Thread.Sleep(1);
+                    Thread.Sleep(1000);
                 }
             }
         }
