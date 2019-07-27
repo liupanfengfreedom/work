@@ -142,9 +142,11 @@ namespace MatchServer
                 mp.PayLoad = roomipaddress;
                 String str = JsonConvert.SerializeObject(mp);
                 mPeopleinroom[i].Send(str);
-                // while (!mPeopleinroom[i].getentrymapisok())
+                Console.WriteLine("mp.MT = MessageType.EntryMAP");
+                while (!mPeopleinroom[i].getentrymapisok())
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(10);
+                    Console.WriteLine("wait for entry room :");
                 }
             }
         }
