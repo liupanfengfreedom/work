@@ -145,7 +145,7 @@ namespace MatchServer
                 Console.WriteLine("mp.MT = MessageType.EntryMAP");
                 while (!mPeopleinroom[i].getentrymapisok())
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(100);
                     Console.WriteLine("wait for entry room :");
                 }
             }
