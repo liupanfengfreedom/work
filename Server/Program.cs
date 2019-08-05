@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Threading;
 
@@ -85,16 +86,29 @@ namespace MatchServer
                                //Thread.Sleep(100);//wait IP port take effect
                             }
                             TCPClient temp = AllWaitforMatchpools[j].MatchHashsetPool.ElementAt(i); ;
-                            bool notfull = AllWaitforMatchpools[j].currentroom.Add(temp);
+                            int maxnumber = AllWaitforMatchpools[j].currentroom.getroommaxpeoplenumber();
+                            int currentnumber = AllWaitforMatchpools[j].currentroom.getnumberofpeopleinroom();
+                            if (currentnumber < maxnumber)
+                            {
+                                AllWaitforMatchpools[j].currentroom.Add(temp);
+                            }
+                            else//full
+                            {
+                                FMessagePackage mp = new FMessagePackage();
+                                mp.MT = MessageType.MAPISFULL;
+                                String str = JsonConvert.SerializeObject(mp);
+                                temp.Send(str);// tell client the number of people in current map has reach the ceilling
+                            }
+
                             temp.isinmatchpool = true;
                             AllWaitforMatchpools[j].MatchHashsetPool.Remove(temp);
                             len = AllWaitforMatchpools[j].MatchHashsetPool.Count;
                             i = 0;
-                            if (!notfull)
-                            {
-                                roomlist.Add(AllWaitforMatchpools[j].currentroom);
-                                AllWaitforMatchpools[j].currentroom = null;
-                            }
+                            //if (!notfull)
+                            //{
+                            //    roomlist.Add(AllWaitforMatchpools[j].currentroom);
+                            //    AllWaitforMatchpools[j].currentroom = null;
+                            //}
                         }
 
                     }

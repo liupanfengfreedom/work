@@ -1,4 +1,4 @@
-﻿//#define MODE1
+﻿#define MODE1
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +25,7 @@ namespace MatchServer
         MAPACTORINFORSENDOK,
         EntryMAP,
         EntryMAPOK,
+        MAPISFULL,//the number in the map has reach the ceilling
         EXITGAME,
         FILERECEIVEOK,//server side receive ok
     }
@@ -131,6 +132,14 @@ namespace MatchServer
         public List<TCPClient> GetAllMember()
         {
             return mPeopleinroom;
+        }
+        public int getnumberofpeopleinroom()
+        {
+            return mPeopleinroom.Count;
+        }
+        public int getroommaxpeoplenumber()
+        {
+            return maxpeople;
         }
         void allpeoplepresentjustgo()
         {
